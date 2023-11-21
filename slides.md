@@ -23,6 +23,8 @@ Warm welcome
 -->
 
 ---
+layout: intro
+---
 
 ## About Me
 
@@ -37,13 +39,15 @@ Allegro - Large e-commerce, I've learned distributed 24/7 systems, on-prem cloud
 -->
 
 ---
+layout: intro
+---
 
 ## About My Team
 
 * Build real-time, highly scalable and fault-tolerant clickstream ingestion platform
 * Process a few billion events every day with e2e latency below one minute
-* Run services on-prem: Scala, Apache Kafka, Kafka Streams, Kafka Connect, K8S
-* Run stream and batch data pipelines on GCP: Apache Beam + Spotify Scio + Dataflow, Spark + Dataproc, Pubsub, BigQuery, Composer
+* Run services on-prem: Scala, Kafka, Kafka Streams, Kafka Connect, K8S 
+* Run stream and batch data pipelines on GCP: Beam, Scio, Spark, Dataflow, Dataproc, Pubsub, BigQuery, Composer
 
 <!--
 Clickstream - Allegro clients interactions with mobile and web platforms
@@ -54,13 +58,15 @@ Today focus: Apache Beam data pipelines on Dataflow, managed service on GCP for 
 -->
 
 ---
+layout: intro
+---
 
 ## About Allegro Data & AI
 
-* 300k+ events / sec
-* Petabyte+ scale
+* 300k+ events / sec (front-end + backend)
+* Petabyte+ data warehouse
 * 1000+ BigQuery tables
-* 200+ engineers in Data & AI (of 1000+ total)
+* 200+ engineers in Data & AI department (of 1000+ total)
 * Scala, Python, SQL, Kotlin, Java ...
   
 <!--
@@ -70,31 +76,52 @@ Real challenges due to ogranization size and diversity
 -->
 
 ---
-
-## TL;DR a.k.a Agenda
+ 
+## TL;DR
 
 * Technology stack 3 minutes intro
-* Sample domain
+* Sample domain overview
 * Batch data pipeline overview
 * Red ---> Green ---> Refactor ---> …
 * Summary
 
 ---
+layout: two-cols
+---
 
 ## Apache Beam
 
-* TODO
+* Unified batch and streaming
+* Write once, run everywhere
+* Java, Python, Go, SQL
+
+::right::
+
+<v-click>
 
 ## Spotify Scio
 
-* TODO
+* Scala SDK
+* Macro generated coders
+* Type-safe BigQuery API
+
+</v-click>
+
+<!-- 
+1) non-trivial business logic can be re-used in batch and streaming
+2a) batch tested on Spark runner, streaming tested on Flink runner
+2b) Dataflow - expensive but gooood, Direct - for local testing
+3) Java - mature, Python - more focused on ML, Go - catching up, SQL - so/so
+
+4) fluent, functional like API
+5) no boilerplate
+6) type-safety
+-->
 
 ---
-
-```yaml
 layout: image
 image: /cars-in-toll-booth.jpg
-```
+---
 
 ## Toll Booth Entry Statistics
 
@@ -114,6 +141,12 @@ flowchart LR
   W1-->O1[(toll.entry_stats_hourly)]
   W2-->O2[(toll.entry_stats_daily)]
 ```
+
+---
+layout: section
+---
+
+## Let's code
 
 ---
 
@@ -849,40 +882,39 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 ```
 
 ---
+layout: statement
+---
 
 ## Key takeaways
 
-* Failing test first
-* Test with "framework of your choice" using **local** runner
-* Start with happy path end--to--end test scenario
-* Don't miss testing domain invariants and business logic
+Test with "framework of your choice" using **local** runner
+
+Start with happy path end--to--end test scenario
+
+Don't miss testing domain invariants and business logic
+
+Failing test first
 
 ---
-
-```yaml
-layout: center
-```
-
-## Q&A
-
+layout: image-right
+image: /qrcode_mkuthan.github.io.png
 ---
 
-```yaml
+## More about TDD for DE
+
+<https://mkuthan.github.io/blog/2023/11/02/tdd-for-de/>
+
+---
 layout: image-right
 image: /qrcode_jobs.allegro.eu.png
-```
+---
 
 ## We're Hiring
 
 <https://jobs.allegro.eu/>
 
 ---
+layout: center
+---
 
-```yaml
-layout: image-right
-image: /qrcode_mkuthan.github.io.png
-```
-
-## More about TDD for DE
-
-<https://mkuthan.github.io/blog/2023/11/02/tdd-for-de/>
+## Q&A
