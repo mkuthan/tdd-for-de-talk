@@ -1,5 +1,6 @@
 ---
 title: Test Driven Development for Data Engineers
+author: Marcin Kuthan
 theme: default
 background: /jeswin-thomas--Cm7hnp4WOg-unsplash.jpg
 class: text-center
