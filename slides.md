@@ -6,9 +6,10 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 transition: slide-left
+layout: intro
 ---
 
-## Test Driven Development for Data Engineers
+# Test Driven Development for Data Engineers
 
 <div class="uppercase text-sm tracking-widest">
 Marcin Kuthan
@@ -46,8 +47,8 @@ layout: intro
 
 * Build real-time, highly scalable and fault-tolerant clickstream ingestion platform
 * Process a few billion events every day with e2e latency below one minute
-* Run services on-prem: Scala, Kafka, Kafka Streams, Kafka Connect, K8S 
-* Run stream and batch data pipelines on GCP: Beam, Scio, Spark, Dataflow, Dataproc, Pubsub, BigQuery, Composer
+* Run services on-prem
+* Run stream and batch data pipelines on GCP
 
 <!--
 Clickstream - Allegro clients interactions with mobile and web platforms
@@ -76,13 +77,23 @@ Real challenges due to ogranization size and diversity
 -->
 
 ---
- 
+layout: statement
+---
+
+## What if you reduce development cycle time <br/>from 30 minutes to 10 seconds<br/>and deliver code of higher quality?
+
+<!--
+Typical data engineer workflow: develop, assembly, deploy, wait for starting, wait for processing, verify the results using SQL
+It takes more than 10 seconds.
+-->
+
+---
+
 ## TL;DR
 
 * Technology stack 3 minutes intro
-* Sample domain overview
-* Batch data pipeline overview
-* Red ---> Green ---> Refactor ---> …
+* Sample batch data pipeline
+* Red 🔴 ---> Green 🟢 ---> Refactor ---> …
 * Summary
 
 ---
@@ -150,7 +161,7 @@ layout: section
 
 ---
 
-## Data pipeline "e2e" test
+## Data pipeline "job/e2e" test
 
 ```scala {2,6-7,14-15|8-13|all}
 import org.scalatest.*
@@ -224,7 +235,7 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 
 ---
 
-## Input data
+## toll.entry data model
 
 ```scala {all|4}
 import com.spotify.scio.bigquery.types.BigQueryType
@@ -242,7 +253,7 @@ object TollBoothEntry {
 
 ---
 
-## Input data test fixture
+## toll.entry test fixture
 
 ```scala
 trait TollBoothEntryFixture {
@@ -257,7 +268,7 @@ trait TollBoothEntryFixture {
 
 ---
 
-## Job test with input data stub
+## Job test with stub for toll.entry
 
 ```scala{9-12}
 "Toll job" should "run in the batch mode" in {
@@ -338,7 +349,7 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 
 ---
 
-## Output data
+## toll.entry_stats data model
 
 ```scala
 import com.spotify.scio.bigquery.types.BigQueryType
@@ -358,7 +369,7 @@ object TollBoothStats {
 
 ---
 
-## Output data test fixture
+## toll.entry_stats test fixture
 
 ```scala
 trait TollBoothStatsFixture {
@@ -375,7 +386,7 @@ trait TollBoothStatsFixture {
 
 ---
 
-## Job test with output expectations
+## Job test with toll.entry_stats expectations
 
 ```scala{8-13|14-19}
 "Toll job" should "run in the batch mode" in {
@@ -472,6 +483,21 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 
 ---
 
+## Data pipeline
+
+```mermaid
+flowchart LR
+  I[(toll.entry)]-->R[Read]:::job-test-->D[Decode]
+  D-->P1[Hourly stats]-->E1[Encode]-->W1[Write]:::job-test
+  D-->P2[Daily stats]-->E2[Encode]-->W2[Write]:::job-test
+  W1-->O1[(toll.entry_stats_hourly)]
+  W2-->O2[(toll.entry_stats_daily)]
+
+  classDef job-test fill:#0a0
+```
+
+---
+
 ## Domain types for toll booth entries
 
 ```scala{1-3|5-7|all}
@@ -495,7 +521,7 @@ final case class TollBoothEntry(
 
 ---
 
-## Domain type test fixture
+## Domain test fixture
 
 ```scala
 trait TollBoothEntryFixture {
@@ -537,7 +563,7 @@ class TollBoothEntryTest extends AnyFlatSpec with Matchers
 
 ---
 
-## Decoding record "unit" test (2)
+## Decoding record "domain/integration" test (2)
 
 ```scala{1,4,7,10,14-15}
 "ToolBoothEntry" should "throw an exception for invalid record" in {
@@ -635,7 +661,7 @@ final case class TollBoothStats(
 
 ---
 
-## Domain type test fixture
+## Domain test fixture
 
 ```scala
 trait TollBoothStatsFixture {
@@ -651,7 +677,7 @@ trait TollBoothStatsFixture {
 
 ---
 
-## Calculate statistics test (1)
+## Calculate statistics "domain/integration" test (1)
 
 ```scala{1-3|4-5|7-11|13-17|19-23}
 class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
@@ -683,7 +709,7 @@ class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
 
 ---
 
-## Calculate statistics test (2)
+## Calculate statistics "domain/integration" test (2)
 
 ```scala{1-5|7|9-25}
 val inputs = boundedTestCollectionOf[TollBoothEntry]
@@ -791,25 +817,6 @@ sbt> testOnly *TollBoothStatsTest
 
 ---
 
-## Encode calculated stats into record
-
-```scala{1|2|3-10|all}
-def encodeRecord(input: SCollection[TollBoothStats]): SCollection[TollBoothStats.Record] =
-  input.mapWithTimestamp { case (record, timestamp) =>
-    Record(
-      created_at = timestamp,
-      id = record.id.id,
-      count = record.count,
-      total_toll = record.totalToll,
-      first_entry_time = record.firstEntryTime,
-      last_entry_time = record.lastEntryTime
-    )
-  }
-}
-```
-
----
-
 ## Finish data pipeline
 
 ```scala{1-4|6|8-11|13-18}
@@ -880,6 +887,34 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 [info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
 ```
+
+---
+
+## Data pipeline
+
+```mermaid
+flowchart LR
+  I[(toll.entry)]-->R[Read]:::job-test-->D[Decode]:::domain-test
+  D-->P1[Hourly stats]:::domain-test-->E1[Encode]:::domain-test-->W1[Write]:::job-test
+  D-->P2[Daily stats]:::domain-test-->E2[Encode]:::domain-test-->W2[Write]:::job-test
+  W1-->O1[(toll.entry_stats_hourly)]
+  W2-->O2[(toll.entry_stats_daily)]
+
+  classDef job-test fill:#0a0
+  classDef domain-test fill:#44f
+```
+
+---
+layout: statement
+---
+
+## What next?
+
+<!--
+1. More domain tests
+2. Defined infrastructure as a code
+3. Do first deployment
+-->
 
 ---
 layout: statement
