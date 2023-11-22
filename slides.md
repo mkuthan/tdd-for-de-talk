@@ -34,9 +34,9 @@ layout: intro
 * Software engineer wannabe @ PIT (7 years)
 
 <!--
-PIT - Military systems, I've learned programming and importance of CI automation
-Roche - Enterprise systems for pharma, I've learned software engineering, clean code, testing and architecture
-Allegro - Large e-commerce, I've learned distributed 24/7 systems, on-prem cloud and public cloud (GCP)
+* PIT - Military systems, I've learned programming and importance of CI automation
+* Roche - Enterprise systems for pharma, I've learned software engineering, clean code, testing and architecture
+* Allegro - Large e-commerce, I've learned distributed 24/7 systems, on-prem cloud and public cloud (GCP)
 -->
 
 ---
@@ -51,11 +51,11 @@ layout: intro
 * Run stream and batch data pipelines on GCP
 
 <!--
-Clickstream - Allegro clients interactions with mobile and web platforms
-Traffic: 100k+ events/sec, it gives ~ 4-5 billion of events daily
-Stream latency: events available on Kafka (on-prem) and on Pubsub (GCP) in a few seconds
-Batch latency: events available in BigQuery in minute
-Today focus: Apache Beam data pipelines on Dataflow, managed service on GCP for unified stream and batch
+* Clickstream - Allegro clients interactions with mobile and web platforms
+* Traffic: 100k+ events/sec, it gives ~ 4-5 billion of events daily
+* Stream latency: events available on Kafka (on-prem) and on Pubsub (GCP) in a few seconds
+* Batch latency: events available in BigQuery in minute
+*   Today focus: Apache Beam data pipelines on Dataflow, managed service on GCP for unified stream and batch
 -->
 
 ---
@@ -71,9 +71,9 @@ layout: intro
 * Scala, Python, SQL, Kotlin, Java ...
   
 <!--
-BigData for real
-Many smart software, data and platform engineers
-Real challenges due to ogranization size and diversity
+* BigData for real
+* Many smart software, data and platform engineers
+* Real challenges due to ogranization size and diversity
 -->
 
 ---
@@ -83,8 +83,8 @@ layout: statement
 ## What if you reduce development cycle time <br/>from 30 minutes to 10 seconds<br/>and deliver code of higher quality?
 
 <!--
-Typical data engineer workflow: develop, assembly, deploy, wait for starting, wait for processing, verify the results using SQL
-It takes more than 10 seconds.
+* Typical data engineer workflow: develop, assembly, deploy, wait for starting, wait for processing, verify the results using SQL
+* It takes more than 10 seconds.
 -->
 
 ---
@@ -120,13 +120,13 @@ layout: two-cols
 
 <!-- 
 1) non-trivial business logic can be re-used in batch and streaming
-2a) batch tested on Spark runner, streaming tested on Flink runner
-2b) Dataflow - expensive but gooood, Direct - for local testing
-3) Java - mature, Python - more focused on ML, Go - catching up, SQL - so/so
+   * batch tested on Spark runner, streaming tested on Flink runner
+   * Dataflow - expensive but gooood, Direct - for local testing
+2) Java - mature, Python - more focused on ML, Go - catching up, SQL - so/so
 
-4) fluent, functional like API
-5) no boilerplate
-6) type-safety
+3) fluent, functional like API
+4) no boilerplate
+5) type-safety
 -->
 
 ---
