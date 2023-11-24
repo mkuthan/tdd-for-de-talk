@@ -16,7 +16,7 @@ layout: intro
 Marcin Kuthan
 </div>
 
-<div class="abs-br mx-5  my-5 flex">
+<div class="abs-br mx-5 my-5 flex">
   <img src="https://allegro.tech/images/event.png" class="h-32">
 </div>
 
@@ -604,7 +604,7 @@ sbt:tollDomain> testOnly *TollBoothEntryTest
 
 ## Decode record into domain type
 
-```scala{1-2,16|5,9-15|6} 
+```scala{1-2,16|5,9-15|6}
 object TollBoothEntry {
   def decodeRecord(input: SCollection[TollBoothEntry.Record]): SCollection[TollBoothEntry] =
     input.transform { in =>
@@ -921,7 +921,7 @@ layout: statement
 layout: statement
 ---
 
-## Key takeaways
+## Key advices
 
 Test with "framework of your choice" using **local** runner
 
