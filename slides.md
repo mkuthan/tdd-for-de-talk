@@ -7,17 +7,12 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 transition: slide-left
-layout: intro
 ---
 
 # Test Driven Development for Data Engineers
 
 <div class="uppercase text-sm tracking-widest">
 Marcin Kuthan
-</div>
-
-<div class="abs-br mx-5 my-5 flex">
-  <img src="https://allegro.tech/images/event.png" class="h-32">
 </div>
 
 <!--
@@ -30,14 +25,14 @@ layout: intro
 
 ## About Me
 
-* Data Engineer / Technical Leader @ Allegro (9 years)
+* Big Data Engineer @ Allegro (9 years)
 * JEE Software Engineer @ Roche (7 years)
 * Software engineer wannabe @ PIT (7 years)
 
 <!--
 * PIT - Military systems, I've learned programming and importance of CI automation
 * Roche - Enterprise systems for pharma, I've learned software engineering, clean code, testing and architecture
-* Allegro - Large e-commerce, I've learned distributed 24/7 systems, on-prem cloud and public cloud (GCP)
+* Allegro - Large e-commerce, I've learned distributed 24/7 systems, on-prem and public cloud (GCP)
 -->
 
 ---
@@ -48,15 +43,14 @@ layout: intro
 
 * Build real-time, highly scalable and fault-tolerant clickstream ingestion platform
 * Process a few billion events every day with e2e latency below one minute
-* Run services on-prem
-* Run stream and batch data pipelines on GCP
+* Run stream and batch data pipelines on Google Cloud Platform
 
 <!--
 * Clickstream - Allegro clients interactions with mobile and web platforms
 * Traffic: 100k+ events/sec, it gives ~ 4-5 billion of events daily
 * Stream latency: events available on Kafka (on-prem) and on Pubsub (GCP) in a few seconds
 * Batch latency: events available in BigQuery in minute
-*   Today focus: Apache Beam data pipelines on Dataflow, managed service on GCP for unified stream and batch
+* Today focus: Apache Beam data pipelines on Dataflow, managed service on GCP for unified stream and batch
 -->
 
 ---
@@ -67,7 +61,6 @@ layout: intro
 
 * 300k+ events / sec (front-end + backend)
 * Petabyte+ data warehouse
-* 1000+ BigQuery tables
 * 200+ engineers in Data & AI department (of 1000+ total)
 * Scala, Python, SQL, Kotlin, Java ...
   
@@ -93,8 +86,8 @@ layout: statement
 ## TL;DR
 
 * Technology stack 3 minutes intro
-* Sample batch data pipeline
-* Red 🔴 ---> Green 🟢 ---> Refactor ---> …
+* Sample data pipeline
+* Red 🔴 ---> Green 🟢 ---> Refactor …
 * Summary
 
 ---
@@ -120,14 +113,15 @@ layout: two-cols
 </v-click>
 
 <!-- 
-1) non-trivial business logic can be re-used in batch and streaming
-   * batch tested on Spark runner, streaming tested on Flink runner
-   * Dataflow - expensive but gooood, Direct - for local testing
-2) Java - mature, Python - more focused on ML, Go - catching up, SQL - so/so
+* non-trivial business logic can be re-used in batch and streaming
+* batch tested on Spark runner, streaming tested on Flink runner
+* Dataflow - expensive but gooood
+* Direct - for local testing
+* Java - mature, Python - more focused on ML, Go - catching up, SQL - so/so
 
-3) fluent, functional like API
-4) no boilerplate
-5) type-safety
+* fluent, functional like API
+* no boilerplate
+* type-safety
 -->
 
 ---
@@ -162,7 +156,7 @@ layout: section
 
 ---
 
-## Data pipeline "job/e2e" test
+## Data pipeline test
 
 ```scala {2,6-7,14-15|8-13|all}
 import org.scalatest.*
@@ -236,7 +230,7 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 
 ---
 
-## toll.entry data model
+## BigQuery toll.entry data model
 
 ```scala {all|4}
 import com.spotify.scio.bigquery.types.BigQueryType
@@ -254,7 +248,7 @@ object TollBoothEntry {
 
 ---
 
-## toll.entry test fixture
+## BigQuery toll.entry test fixture
 
 ```scala
 trait TollBoothEntryFixture {
@@ -350,7 +344,7 @@ sbt> testOnly *TollBoothEntryStatsJobTest
 
 ---
 
-## toll.entry_stats data model
+## BigQuery toll.entry_stats data model
 
 ```scala
 import com.spotify.scio.bigquery.types.BigQueryType
@@ -370,7 +364,7 @@ object TollBoothStats {
 
 ---
 
-## toll.entry_stats test fixture
+## Test fixture
 
 ```scala
 trait TollBoothStatsFixture {
@@ -522,7 +516,7 @@ final case class TollBoothEntry(
 
 ---
 
-## Domain test fixture
+## Test fixture
 
 ```scala
 trait TollBoothEntryFixture {
@@ -537,7 +531,7 @@ trait TollBoothEntryFixture {
 
 ---
 
-## Decoding record "unit" test (1)
+## Decoding BigQuery record into domain type test (1)
 
 ```scala{1-8,19-20|9-11|13|15-17}
 import org.scalatest.*
@@ -547,7 +541,7 @@ class TollBoothEntryTest extends AnyFlatSpec with Matchers
     with TestScioContext
     with TollBoothEntryFixture {
 
-  "ToolBoothEntry" should "decode valid record into TollBoothEntry" in runWithScioContext { sc =>
+  "ToolBoothEntry" should "decode valid record" in runWithScioContext { sc =>
     val inputs = boundedTestCollectionOf[TollBoothEntry.Record]
       .addElementsAtMinimumTime(anyTollBoothEntryRecord)
       .advanceWatermarkToInfinity()
@@ -564,9 +558,9 @@ class TollBoothEntryTest extends AnyFlatSpec with Matchers
 
 ---
 
-## Decoding record "domain/integration" test (2)
+## Decoding BigQuery record into domain type test (2)
 
-```scala{1,4,7,10,14-15}
+```scala{1,2,4,7,10,14-15}
 "ToolBoothEntry" should "throw an exception for invalid record" in {
     val thrown = the[RuntimeException] thrownBy {
       runWithScioContext { sc =>
@@ -662,7 +656,7 @@ final case class TollBoothStats(
 
 ---
 
-## Domain test fixture
+## Test fixture
 
 ```scala
 trait TollBoothStatsFixture {
@@ -678,7 +672,7 @@ trait TollBoothStatsFixture {
 
 ---
 
-## Calculate statistics "domain/integration" test (1)
+## Calculate statistics test (1)
 
 ```scala{1-3|4-5|7-11|13-17|19-23}
 class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
@@ -710,7 +704,7 @@ class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
 
 ---
 
-## Calculate statistics "domain/integration" test (2)
+## Calculate statistics test (2)
 
 ```scala{1-5|7|9-25}
 val inputs = boundedTestCollectionOf[TollBoothEntry]
@@ -759,7 +753,7 @@ sbt:tollDomain> testOnly *TollBoothStatsTest
 
 ```scala{1,10|3-9|2|all}
 implicit val TollBoothStatsSumByKey = SumByKey.create(
-  keyFn = _.id.id,
+  keyFn = _.id,
   plusFn = (x, y) =>
     x.copy(
       count = x.count + y.count,
@@ -820,33 +814,33 @@ sbt> testOnly *TollBoothStatsTest
 
 ## Finish data pipeline
 
-```scala{1-4|6|8-11|13-18}
+```scala{1-3|5|7|9-10|11-12|13-16|18-19|20}
 def main(mainArgs: Array[String]): Unit = {
   val (sc, args) = ContextAndArgs(mainArgs)
   // parse arguments
+
   val entryRecords = sc.readFromBigQuery(...)
 
   val entries = TollBoothEntry.decodeRecord(entryRecords)
 
   val tollBoothStatsHourly = TollBoothStats
     .calculateInFixedWindow(entries, Duration.standardHours(1))
-  val tollBoothStatsDaily = TollBoothStats
-    .calculateInFixedWindow(entries, Duration.standardDays(1))
-
   TollBoothStats
     .encodeRecord(tollBoothStatsHourly)
     .writeBoundedToBigQuery(
       IoIdentifier[TollBoothStats.Record]("entry-stats-hourly-table-id"),
       BigQueryPartition.daily(entryStatsHourlyTable, effectiveDate)
     )
-  
-  // similar code for daily stats 
+
+  val tollBoothStatsDaily = TollBoothStats
+    .calculateInFixedWindow(entries, Duration.standardDays(1))
+  // similar code for encoding and writing daily stats 
 }
 ```
 
 ---
 
-## Revisit "e2e" test
+## Revisit data pipeline test
 
 ```scala
 "Toll job" should "run in the batch mode" in {
