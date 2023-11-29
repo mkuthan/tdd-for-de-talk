@@ -2,7 +2,7 @@
 title: Test Driven Development for Data Engineers
 author: Marcin Kuthan
 theme: default
-background: /jeswin-thomas--Cm7hnp4WOg-unsplash.jpg
+background: jeswin-thomas--Cm7hnp4WOg-unsplash.jpg
 class: text-center
 highlighter: shiki
 lineNumbers: true
@@ -126,7 +126,7 @@ layout: two-cols
 
 ---
 layout: image
-image: /cars-in-toll-booth.jpg
+image: cars-in-toll-booth.jpg
 ---
 
 ## Toll Booth Entry Statistics
@@ -927,7 +927,7 @@ Failing test first
 
 ---
 layout: image-right
-image: /qrcode_mkuthan.github.io.png
+image: qrcode_mkuthan.github.io.png
 ---
 
 ## More about TDD for DE
@@ -936,7 +936,7 @@ image: /qrcode_mkuthan.github.io.png
 
 ---
 layout: image-right
-image: /qrcode_jobs.allegro.eu.png
+image: qrcode_jobs.allegro.eu.png
 ---
 
 ## We're Hiring
