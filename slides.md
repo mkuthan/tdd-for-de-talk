@@ -61,7 +61,7 @@ layout: intro
 
 * 300k+ events / sec (front-end + backend)
 * Petabyte+ data warehouse
-* 200+ engineers in Data & AI department (of 1000+ total)
+* 200+ engineers in Data & AI department (of 2000+ total)
 * Scala, Python, SQL, Kotlin, Java ...
   
 <!--
@@ -74,7 +74,7 @@ layout: intro
 layout: statement
 ---
 
-## What if you reduce development cycle time <br/>from 30 minutes to 10 seconds<br/>and deliver code of higher quality?
+## What if you could reduce development cycle time <br/>from 30 minutes to 10 seconds<br/>and deliver code of higher quality?
 
 <!--
 * Typical data engineer workflow: develop, assembly, deploy, wait for starting, wait for processing, verify the results using SQL
@@ -87,7 +87,7 @@ layout: statement
 
 * Technology stack 3 minutes intro
 * Sample data pipeline
-* Red 🔴 ---> Green 🟢 ---> Refactor …
+* 🔴 ---> 🟢 ---> Refactor …
 * Summary
 
 ---
@@ -431,16 +431,12 @@ CustomIO(entry-stats-daily-table-id)
 
 ## Write to BigQuery
 
-```scala{11-15|17-20|22|all}
+```scala{7-11|13-15|18|all}
 def main(mainArgs: Array[String]): Unit = {
   val (sc, args) = ContextAndArgs(mainArgs)
+  // parse arguments, ommited
 
-  val effectiveDate = LocalDate.parse(args.required("effectiveDate"))
-  val entryTable = args.required("entryTable")
-  val entryStatsHourlyTable = args.required("entryStatsHourlyTable")
-  val entryStatsDailyTable = args.required("entryStatsDailyTable")
-
-  val entryRecords = sc.readFromBigQuery() // Omitted
+  val entryRecords = sc.readFromBigQuery(...)
 
   // TODO: calculate hourly stats, now it's a test fixture
   val endOfHourlyWindow = Instant.parse("2014-09-10T12:59:59.999Z")
@@ -674,7 +670,7 @@ trait TollBoothStatsFixture {
 
 ## Calculate statistics test (1)
 
-```scala{1-3|4-5|7-11|13-17|19-23}
+```scala{1-3|4-5|6-11|12-16|17-21}
 class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
 
   TollBoothStats should "calculate statistics in fixed window" in runWithScioContext { sc =>
@@ -686,13 +682,11 @@ class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
       entryTime = Instant.parse("2014-09-10T12:01:00.000Z"),
       toll = BigDecimal(2)
     )
-
     val entry2 = anyTollBoothEntry.copy(
       id = tollBoothId1,
       entryTime = Instant.parse("2014-09-10T12:01:30.000Z"),
       toll = BigDecimal(1)
     )
-
     val entry3 = anyTollBoothEntry.copy(
       id = tollBoothId2,
       entryTime = Instant.parse("2014-09-10T12:04:00.000Z"),
@@ -706,13 +700,12 @@ class TollBoothStatsTest extends AnyFlatSpec with Matchers with ... {
 
 ## Calculate statistics test (2)
 
-```scala{1-5|7|9-25}
+```scala{1-5|6|8-24}
 val inputs = boundedTestCollectionOf[TollBoothEntry]
   .addElementsAtTime(entry1.entryTime, entry1)
   .addElementsAtTime(entry2.entryTime, entry2)
   .addElementsAtTime(entry3.entryTime, entry3)
   .advanceWatermarkToInfinity()
-
 val results = calculateInFixedWindow(sc.testBounded(inputs), Duration.standardMinutes(5))
 
 results.withTimestamp should containElementsAtTime(
@@ -915,7 +908,7 @@ layout: statement
 layout: statement
 ---
 
-## Key advices
+## Pieces of advice
 
 Test with "framework of your choice" using **local** runner
 
@@ -936,7 +929,7 @@ image: qrcode_mkuthan.github.io.png
 
 ---
 layout: image-right
-image: qrcode_jobs.allegro.eu.png
+image: qrcode_jobs.png
 ---
 
 ## We're Hiring
